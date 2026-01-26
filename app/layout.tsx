@@ -3,6 +3,7 @@ import { Poppins, Quicksand, Nunito } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
+import FloatingWhatsApp from "@/components/ui/floating-whatsapp";
 
 // Font configurations
 const poppins = Poppins({
@@ -53,6 +54,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <FloatingWhatsApp />
       </body>
     </html>
   );

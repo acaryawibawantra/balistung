@@ -19,7 +19,7 @@ export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
-        <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <header className="sticky top-0 z-50 bg-white/60 backdrop-blur-md">
             <Container>
                 <nav className="flex items-center justify-between py-4">
                     {/* Logo */}
@@ -56,15 +56,16 @@ export default function Header() {
                     </div>
 
                     {/* CTA Button */}
-                    <div className="hidden lg:flex items-center gap-4">
+                    <div className="flex items-center gap-4">
                         <a
                             href="https://wa.me/6281138802800"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="btn btn-primary"
+                            className="flex items-center gap-2 font-bold text-gray-600 hover:text-primary-green transition-colors"
                         >
                             <Phone className="w-4 h-4" />
-                            Hubungi Kami
+                            <span className="hidden sm:inline">Hubungi Kami</span>
+                            <span className="sm:hidden text-sm">Hubungi</span>
                         </a>
                     </div>
 

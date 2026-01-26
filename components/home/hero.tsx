@@ -107,7 +107,7 @@ export default function HeroSection() {
     );
 
     return (
-        <section className="relative pt-24 pb-32 overflow-hidden bg-gradient-to-b from-primary-green/10 to-white">
+        <section className="relative pt-24 pb-32 overflow-hidden bg-gradient-to-b from-green-100 to-white">
             <Container>
                 <div className="flex flex-col items-center text-center max-w-5xl mx-auto space-y-10">
 
@@ -120,7 +120,7 @@ export default function HeroSection() {
 
                     {/* Interactive Search Bar */}
                     {/* ... (Search bar code remains same) ... */}
-                    <div className="w-full max-w-3xl bg-white rounded-2xl shadow-xl border-4 border-white/50 relative z-20">
+                    <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg border border-gray-100 relative z-20">
                         {/* ... (Content of search bar) ... */}
                         <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-gray-100">
 
