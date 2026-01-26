@@ -6,7 +6,7 @@ interface ContainerProps {
     className?: string;
 }
 
-export function Container({ children, className }: ContainerProps) {
+export default function Container({ children, className }: ContainerProps) {
     return (
         <div className={cn('container-custom', className)}>
             {children}
