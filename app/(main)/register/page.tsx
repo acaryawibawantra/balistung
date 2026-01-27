@@ -52,7 +52,7 @@ export default function RegisterPage() {
 
             const response = await fetch(spreadsheetUrl, {
                 method: 'POST',
-                mode: 'no-cors', // Important for Google Apps Script
+                mode: 'no-cors', // Important for Google Apps Scriptgit 
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -111,7 +111,7 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
     };
 
     return (
-        <div className="min-h-screen bg-cream">
+        <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
             <Container>
                 <div className="py-12">
                     {/* Page Heading */}
