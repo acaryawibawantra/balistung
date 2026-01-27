@@ -1,15 +1,21 @@
 import HeroSection from '@/components/home/hero';
-import Container from '@/components/layout/container';
+import TestimonialsSection from '@/components/home/testimonials';
+import WhyChooseUs from '@/components/home/why-choose-us';
+import GallerySection from '@/components/home/gallery';
+import CTASection from '@/components/home/cta';
+import BlogSection from '@/components/home/blog';
+import FAQSection from '@/components/home/faq';
 
 export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <Container>
-        <div className="py-20 text-center text-gray-400">
-          <p>More sections coming soon...</p>
-        </div>
-      </Container>
+      <TestimonialsSection />
+      <WhyChooseUs />
+      <GallerySection />
+      <CTASection />
+      <BlogSection />
+      <FAQSection />
     </>
   );
 }

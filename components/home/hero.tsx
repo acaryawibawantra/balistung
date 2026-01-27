@@ -107,14 +107,22 @@ export default function HeroSection() {
     );
 
     return (
-        <section className="relative pt-24 pb-32 overflow-hidden bg-gradient-to-b from-green-100 to-white">
+        <section
+            className="relative pt-24 pb-32 overflow-hidden bg-gradient-to-b from-green-100 to-white"
+            style={{
+                backgroundImage: 'url(/background2.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+            }}
+        >
             <Container>
                 <div className="flex flex-col items-center text-center max-w-5xl mx-auto space-y-10">
 
                     {/* Headline */}
                     {/* ... (Headline remains same) ... */}
-                    <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl leading-tight text-gray-900">
-                        Mahir Baca, Tulis & Hitung<br />
+                    <h1 className="font-display font-extrabold text-4xl md:text-5xl lg:text-6xl leading-tight text-yellow-500">
+                        Baca, Tulis & Hitung<br />
                         dengan <span className="text-primary-green">Menyenangkan</span>
                     </h1>
 
@@ -268,6 +276,9 @@ export default function HeroSection() {
 
                 </div>
             </Container>
+
+            {/* Gradient overlay for smooth transition */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-white pointer-events-none"></div>
         </section>
     );
 }
