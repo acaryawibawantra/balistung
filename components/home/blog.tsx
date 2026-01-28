@@ -55,55 +55,64 @@ export default function BlogSection() {
                     </Link>
                 </div>
 
-                {/* Blog Cards Grid */}
-                <div className="grid md:grid-cols-3 gap-8">
-                    {blogPosts.map((post, idx) => (
-                        <article
-                            key={idx}
-                            className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group"
-                        >
-                            {/* Image */}
-                            <div className="relative aspect-[5/3] overflow-hidden bg-gray-100">
-                                <Image
-                                    src={post.image}
-                                    alt={post.title}
-                                    fill
-                                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                                />
-                            </div>
-
-                            {/* Content */}
-                            <div className="p-6 space-y-4">
-                                {/* Meta */}
-                                <div className="flex items-center gap-2 text-sm">
-                                    <span className={`font-bold uppercase ${post.categoryColor}`}>
-                                        {post.category}
-                                    </span>
-                                    <span className="text-gray-400">•</span>
-                                    <span className="text-gray-500">{post.date}</span>
+                {/* Blog Cards Grid / Carousel on Mobile */}
+                <div className="relative">
+                    <div className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 pb-6 md:pb-0">
+                        {blogPosts.map((post, idx) => (
+                            <article
+                                key={idx}
+                                className="min-w-[85vw] md:min-w-0 snap-center bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 md:hover:-translate-y-2 group"
+                            >
+                                {/* Image */}
+                                <div className="relative aspect-[5/3] overflow-hidden bg-gray-100">
+                                    <Image
+                                        src={post.image}
+                                        alt={post.title}
+                                        fill
+                                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                    />
                                 </div>
 
-                                {/* Title */}
-                                <h4 className="font-bold text-xl text-gray-900 leading-tight">
-                                    {post.title}
-                                </h4>
+                                {/* Content */}
+                                <div className="p-6 space-y-4">
+                                    {/* Meta */}
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <span className={`font-bold uppercase ${post.categoryColor}`}>
+                                            {post.category}
+                                        </span>
+                                        <span className="text-gray-400">•</span>
+                                        <span className="text-gray-500">{post.date}</span>
+                                    </div>
 
-                                {/* Excerpt */}
-                                <p className="text-gray-600 leading-relaxed line-clamp-3">
-                                    {post.excerpt}
-                                </p>
+                                    {/* Title */}
+                                    <h4 className="font-bold text-xl text-gray-900 leading-tight">
+                                        {post.title}
+                                    </h4>
 
-                                {/* Read More Link */}
-                                <Link
-                                    href={`/blog/${idx + 1}`}
-                                    className="inline-flex items-center gap-2 text-red-500 font-bold hover:gap-3 transition-all duration-300"
-                                >
-                                    Baca Selengkapnya
-                                    <ArrowRight className="w-4 h-4" />
-                                </Link>
-                            </div>
-                        </article>
-                    ))}
+                                    {/* Excerpt */}
+                                    <p className="text-gray-600 leading-relaxed line-clamp-3">
+                                        {post.excerpt}
+                                    </p>
+
+                                    {/* Read More Link */}
+                                    <Link
+                                        href={`/blog/${idx + 1}`}
+                                        className="inline-flex items-center gap-2 text-red-500 font-bold hover:gap-3 transition-all duration-300"
+                                    >
+                                        Baca Selengkapnya
+                                        <ArrowRight className="w-4 h-4" />
+                                    </Link>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+
+                    {/* Mobile Scroll Indicator (Optional, but helps UX) */}
+                    <div className="flex md:hidden justify-center gap-2 mt-4">
+                        {blogPosts.map((_, idx) => (
+                            <div key={idx} className="w-2 h-2 rounded-full bg-gray-300 first:bg-red-500" />
+                        ))}
+                    </div>
                 </div>
             </Container>
         </section>
