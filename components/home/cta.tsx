@@ -29,7 +29,7 @@ export default function CTASection() {
                             Daftar Kelas Trial Sekarang
                         </Link>
                         <Link
-                            href="#programs"
+                            href="/programs"
                             className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-white text-gray-900 font-bold text-lg border-2 border-gray-200 hover:border-primary-green hover:bg-gray-50 transition-all duration-300 w-full sm:w-auto"
                         >
                             Lihat Semua Program
