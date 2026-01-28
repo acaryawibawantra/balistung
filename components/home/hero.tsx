@@ -12,7 +12,7 @@ const programs = [
         description: 'Pembelajaran langsung di pusat Balistung terdekat. Anak berinteraksi dengan tutor dan teman sebaya.',
         bgIcon: 'bg-blue-50',
         color: 'text-blue-600',
-        link: '#offline'
+        link: '/programs/offline'
     },
     {
         icon: <User className="w-6 h-6 text-yellow-500" />,
@@ -20,7 +20,7 @@ const programs = [
         description: 'Tutor berpengalaman datang langsung ke rumah Anda. Fokus penuh 1-on-1.',
         bgIcon: 'bg-yellow-50',
         color: 'text-yellow-600',
-        link: '#private'
+        link: '/programs/private'
     },
     {
         icon: <Video className="w-6 h-6 text-green-500" />,
