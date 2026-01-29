@@ -35,15 +35,19 @@ export default function RegisterPage() {
             'sd4': '4 SD',
             'sd5': '5 SD',
             'sd6': '6 SD',
-            'smp': 'SMP'
+            'smp': 'SMP',
+            'sma': 'SMA'
         };
 
         // Format program label
         const programLabels: Record<string, string> = {
-            'calistung': 'Balistung (Calistung)',
-            'english': 'English for Kids',
-            'math': 'Matematika SD/SMP',
-            'homework': 'Bimbingan PR (Semua Mapel)'
+            'bermain': 'Kelas Bermain (PAUD)',
+            'bacatulis': 'Baca Tulis (PAUD)',
+            'hitung': 'Berhitung (PAUD)',
+            'combo': 'Paket Combo SD (Pancasila, IPAS, B. Indo)',
+            'english': 'Bahasa Inggris',
+            'math': 'Matematika',
+            'request': 'Bimbingan SD-SMA (By Request)'
         };
 
         // Send data to Google Spreadsheet
@@ -220,6 +224,7 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                                                     <option value="sd5">5 SD</option>
                                                     <option value="sd6">6 SD</option>
                                                     <option value="smp">SMP</option>
+                                                    <option value="sma">SMA</option>
                                                 </select>
                                             </label>
                                         </div>
@@ -236,12 +241,45 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                                                     <input
                                                         type="radio"
                                                         name="program"
-                                                        value="calistung"
-                                                        checked={formData.programChoice === 'calistung'}
+                                                        value="bermain"
+                                                        checked={formData.programChoice === 'bermain'}
                                                         onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
                                                         className="w-4 h-4 text-primary-green focus:ring-primary-green"
                                                     />
-                                                    <span className="ml-3 font-medium">Balistung (Calistung)</span>
+                                                    <span className="ml-3 font-medium">Kelas Bermain (PAUD)</span>
+                                                </label>
+                                                <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
+                                                    <input
+                                                        type="radio"
+                                                        name="program"
+                                                        value="bacatulis"
+                                                        checked={formData.programChoice === 'bacatulis'}
+                                                        onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
+                                                        className="w-4 h-4 text-primary-green focus:ring-primary-green"
+                                                    />
+                                                    <span className="ml-3 font-medium">Baca Tulis (PAUD)</span>
+                                                </label>
+                                                <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
+                                                    <input
+                                                        type="radio"
+                                                        name="program"
+                                                        value="hitung"
+                                                        checked={formData.programChoice === 'hitung'}
+                                                        onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
+                                                        className="w-4 h-4 text-primary-green focus:ring-primary-green"
+                                                    />
+                                                    <span className="ml-3 font-medium">Berhitung (PAUD)</span>
+                                                </label>
+                                                <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
+                                                    <input
+                                                        type="radio"
+                                                        name="program"
+                                                        value="combo"
+                                                        checked={formData.programChoice === 'combo'}
+                                                        onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
+                                                        className="w-4 h-4 text-primary-green focus:ring-primary-green"
+                                                    />
+                                                    <span className="ml-3 font-medium">Paket Combo SD (Pancasila, IPAS, B. Indo)</span>
                                                 </label>
                                                 <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
                                                     <input
@@ -252,7 +290,7 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                                                         onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
                                                         className="w-4 h-4 text-primary-green focus:ring-primary-green"
                                                     />
-                                                    <span className="ml-3 font-medium">English for Kids</span>
+                                                    <span className="ml-3 font-medium">Bahasa Inggris</span>
                                                 </label>
                                                 <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
                                                     <input
@@ -263,18 +301,18 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                                                         onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
                                                         className="w-4 h-4 text-primary-green focus:ring-primary-green"
                                                     />
-                                                    <span className="ml-3 font-medium">Matematika SD/SMP</span>
+                                                    <span className="ml-3 font-medium">Matematika</span>
                                                 </label>
                                                 <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
                                                     <input
                                                         type="radio"
                                                         name="program"
-                                                        value="homework"
-                                                        checked={formData.programChoice === 'homework'}
+                                                        value="request"
+                                                        checked={formData.programChoice === 'request'}
                                                         onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
                                                         className="w-4 h-4 text-primary-green focus:ring-primary-green"
                                                     />
-                                                    <span className="ml-3 font-medium">Bimbingan PR (Semua Mapel)</span>
+                                                    <span className="ml-3 font-medium">Bimbingan SD-SMA (By Request)</span>
                                                 </label>
                                             </div>
                                         </label>
