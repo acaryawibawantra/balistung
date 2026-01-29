@@ -1,34 +1,35 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Search, Home, User, Video, ArrowRight, MapPin, BookOpen, ChevronDown } from 'lucide-react';
+import { Search, Home, User, Video, ArrowRight, MapPin, BookOpen, ChevronDown, X } from 'lucide-react';
 import Container from '@/components/layout/container';
 
 const programs = [
     {
-        icon: <Home className="w-6 h-6 text-blue-500" />,
+        icon: <Home className="w-6 h-6 text-[#58bbe4]" />,
         title: 'Offline',
         description: 'Pembelajaran langsung di pusat Balistung terdekat. Anak berinteraksi dengan tutor dan teman sebaya.',
         bgIcon: 'bg-blue-50',
-        color: 'text-blue-600',
+        color: 'text-[#58bbe4]',
         link: '/programs/offline'
     },
     {
-        icon: <User className="w-6 h-6 text-yellow-500" />,
+        icon: <User className="w-6 h-6 text-[#fad93c]" />,
         title: 'Private',
         description: 'Tutor berpengalaman datang langsung ke rumah Anda. Fokus penuh 1-on-1.',
         bgIcon: 'bg-yellow-50',
-        color: 'text-yellow-600',
+        color: 'text-[#f58d2c]',
         link: '/programs/private'
     },
     {
-        icon: <Video className="w-6 h-6 text-green-500" />,
+        icon: <Video className="w-6 h-6 text-[#8ec31f]" />,
         title: 'Online',
         description: 'Belajar interaktif dari mana saja melalui platform virtual kami.',
         bgIcon: 'bg-green-50',
-        color: 'text-green-600',
-        link: '#online'
+        color: 'text-[#8ec31f]',
+        link: '/programs/online'
     }
 ];
 
@@ -47,18 +48,13 @@ const allCategories = [
 
 // Dummy data for search suggestions
 const dummyPrograms = [
-    "Calistung (Baca Tulis Hitung)",
-    "Matematika SD",
-    "Bahasa Inggris Kids",
-    "Bimbingan Belajar SD",
-    "Persiapan Masuk SD",
-    "Matematika SMP",
-    "Sains / IPA SD",
-    "Kelas Bermain",
-    "Persiapan Masuk SMA",
-    "Matematika SMA",
-    "Numerik",
-    "Sempoa",
+    "Kelas Bermain (PAUD)",
+    "Baca Tulis (PAUD)",
+    "Berhitung (PAUD)",
+    "Paket Combo SD (Pancasila, IPAS, B. Indo)",
+    "Bahasa Inggris (SD)",
+    "Matematika (SD)",
+    "Bimbingan SD-SMA (By Request)",
 ];
 
 const learningModes = [
@@ -68,9 +64,10 @@ const learningModes = [
 ];
 
 export default function HeroSection() {
+    const router = useRouter();
     const [isFocused, setIsFocused] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedMode, setSelectedMode] = useState(learningModes[0]);
+    const [selectedMode, setSelectedMode] = useState<typeof learningModes[0] | null>(null);
     const [isModeOpen, setIsModeOpen] = useState(false);
 
     // Category Pagination State
@@ -145,6 +142,15 @@ export default function HeroSection() {
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                     />
+                                    {searchQuery && (
+                                        <button
+                                            onClick={() => setSearchQuery('')}
+                                            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                                            title="Bersihkan pencarian"
+                                        >
+                                            <X className="w-4 h-4 text-gray-400" />
+                                        </button>
+                                    )}
                                 </div>
 
                                 {/* Dropdown Suggestions */}
@@ -156,7 +162,14 @@ export default function HeroSection() {
                                                 <button
                                                     key={idx}
                                                     className="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700 font-medium flex items-center gap-3 transition-colors"
-                                                    onClick={() => setSearchQuery(prog)}
+                                                    onClick={() => {
+                                                        setSearchQuery(prog);
+                                                        if (selectedMode) {
+                                                            router.push(`/programs/${selectedMode.id}`);
+                                                        } else {
+                                                            setIsModeOpen(true);
+                                                        }
+                                                    }}
                                                 >
                                                     <Search className="w-4 h-4 text-gray-400" />
                                                     {prog}
@@ -177,10 +190,16 @@ export default function HeroSection() {
                                     onBlur={() => setTimeout(() => setIsModeOpen(false), 200)}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <selectedMode.icon className="w-5 h-5 text-primary-orange" />
+                                        {selectedMode ? (
+                                            <selectedMode.icon className="w-5 h-5 text-primary-orange" />
+                                        ) : (
+                                            <MapPin className="w-5 h-5 text-gray-400" />
+                                        )}
                                         <div className="text-left">
                                             <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Mode Belajar</div>
-                                            <div className="text-sm font-bold text-gray-700 truncate">{selectedMode.id === 'offline' ? 'Offline' : selectedMode.id === 'private' ? 'Private' : 'Online'}</div>
+                                            <div className="text-sm font-bold text-gray-700 truncate">
+                                                {selectedMode ? (selectedMode.id === 'offline' ? 'Offline' : selectedMode.id === 'private' ? 'Private' : 'Online') : 'Mau belajar di mana?'}
+                                            </div>
                                         </div>
                                     </div>
                                     <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isModeOpen ? 'rotate-180' : ''}`} />
@@ -192,10 +211,13 @@ export default function HeroSection() {
                                         {learningModes.map((mode) => (
                                             <button
                                                 key={mode.id}
-                                                className={`w-full text-left px-4 py-3 hover:bg-gray-50 font-medium flex items-center gap-3 transition-colors ${selectedMode.id === mode.id ? 'bg-orange-50 text-primary-orange' : 'text-gray-700'}`}
+                                                className={`w-full text-left px-4 py-3 hover:bg-gray-50 font-medium flex items-center gap-3 transition-colors ${selectedMode?.id === mode.id ? 'bg-orange-50 text-primary-orange' : 'text-gray-700'}`}
                                                 onClick={() => {
                                                     setSelectedMode(mode);
                                                     setIsModeOpen(false);
+                                                    if (searchQuery.trim() !== '') {
+                                                        router.push(`/programs/${mode.id}`);
+                                                    }
                                                 }}
                                             >
                                                 <mode.icon className="w-4 h-4" />
@@ -227,7 +249,14 @@ export default function HeroSection() {
                             <button
                                 key={idx}
                                 className="group flex flex-col items-center gap-3 p-2 transition-transform hover:-translate-y-1"
-                                onClick={() => setSearchQuery(cat.title)}
+                                onClick={() => {
+                                    setSearchQuery(cat.title);
+                                    if (selectedMode) {
+                                        router.push(`/programs/${selectedMode.id}`);
+                                    } else {
+                                        setIsModeOpen(true);
+                                    }
+                                }}
                             >
                                 <div className={`w-14 h-14 ${cat.color} rounded-full flex items-center justify-center text-2xl shadow-sm group-hover:shadow-md transition-all`}>
                                     {cat.icon}
