@@ -27,13 +27,17 @@ export type GradeLevel =
     | 'sd4'
     | 'sd5'
     | 'sd6'
-    | 'smp';
+    | 'smp'
+    | 'sma';
 
 export type ProgramType =
-    | 'calistung'
+    | 'bermain'
+    | 'bacatulis'
+    | 'hitung'
+    | 'combo'
     | 'english'
     | 'math'
-    | 'homework';
+    | 'request';
 
 export type RegistrationStatus =
     | 'pending'
