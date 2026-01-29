@@ -33,7 +33,7 @@ const programCategories = [
             { icon: Clock, text: 'Durasi: 60 Menit / Sesi' },
             { icon: Users, text: 'Kelompok Kecil (Maks. 5 Anak)' },
         ],
-        ctaColor: 'bg-primary-blue hover:brightness-110 shadow-blue-500/25',
+        ctaColor: 'bg-[#58bbe4] hover:brightness-110 shadow-blue-500/25',
         slug: 'offline'
     },
     {
@@ -42,9 +42,9 @@ const programCategories = [
         description: 'Layanan guru datang ke rumah Anda. Memberikan perhatian penuh 1-on-1 yang lebih personal dan waktu belajar yang fleksibel.',
         badge: 'Khusus PAUD - SD',
         icon: Home,
-        color: 'bg-primary-orange',
-        textColor: 'text-primary-orange',
-        borderColor: 'border-primary-orange',
+        color: 'bg-[#f58d2c]',
+        textColor: 'text-[#f58d2c]',
+        borderColor: 'border-[#f58d2c]',
         lightBg: 'bg-orange-50',
         image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDN15OD1B3KpLhp_SDKdKmFSTTxaPFh-mP1KvbIlQLChR1V3Inz7Y9jl8ENDafZOlKjxqIrNUrrngyghHFXZHOr6PrVesE6HVez9OpKvP5Ztxpsfu4XGom_xGcUy15Jm3w161o57jZTXVtI5rwMoFRFiWUicWlscAVnW5QjwGHWesVUGX5nyYKbk5vVLpr6A6yYW2KB5MgeaumLNE_eBFqvZxkdPG41FGVrXfBggVJjzqvGi48lJKEgeBiFRdmgFPMvCG0xp-t4n5c',
         features: [
@@ -52,7 +52,7 @@ const programCategories = [
             { icon: Clock, text: 'Durasi: 60 Menit / Sesi' },
             { icon: User, text: 'Fokus Personal 1-on-1' },
         ],
-        ctaColor: 'bg-primary-orange hover:brightness-110 shadow-orange-500/25',
+        ctaColor: 'bg-[#f58d2c] hover:brightness-110 shadow-orange-500/25',
         slug: 'private'
     },
     {
@@ -82,12 +82,12 @@ export default function ProgramsPage() {
             {/* Set some theme variables for blue which is missing in global theme but used in design */}
             <style jsx global>{`
         :root {
-          --color-primary-blue: #13a4ec;
+          --color-primary-blue: #58bbe4;
         }
         .bg-primary-blue { background-color: var(--color-primary-blue); }
         .text-primary-blue { color: var(--color-primary-blue); }
         .border-primary-blue { border-color: var(--color-primary-blue); }
-        .bg-blue-50 { background-color: #eff6ff; }
+        .bg-blue-50 { background-color: rgba(88, 187, 228, 0.1); }
       `}</style>
 
             <Container>
@@ -95,7 +95,7 @@ export default function ProgramsPage() {
                 <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12 md:mb-16">
                     <div className="max-w-2xl space-y-4">
                         <p className="text-primary-green font-bold uppercase tracking-wider text-sm">Pilihan Program</p>
-                        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+                        <h1 className="font-display font-extrabold text-4xl md:text-5xl lg:text-6xl leading-tight text-[#f58d2c]">
                             Pilih Program Terbaik untuk Si Kecil
                         </h1>
                         <p className="text-lg text-gray-600 font-medium">

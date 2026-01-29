@@ -10,8 +10,11 @@
 @theme {
   /* ========== PRIMARY COLORS (from Balistung Logo) ========== */
   --color-primary-green: #8ec31f;
-  --color-primary-yellow: #ffc107;
-  --color-primary-orange: #ff9800;
+  --color-primary-yellow: #fad93c;
+  --color-primary-orange: #f58d2c;
+  --color-primary-blue: #58bbe4;
+  --color-primary-red: #e23634;
+  --color-primary-pink: #f39bb3;
 
   /* ========== NEUTRAL COLORS ========== */
   --color-cream: #fffbf5;
@@ -21,7 +24,7 @@
   --shadow-playful: 0 8px 20px rgba(142, 195, 31, 0.2);
 
   /* ========== GRADIENTS ========== */
-  --gradient-primary: linear-gradient(135deg, #8ec31f 0%, #ffc107 100%);
+  --gradient-primary: linear-gradient(135deg, #8ec31f 0%, #fad93c 100%);
 }
 
 /* ========== BASE STYLES ========== */
@@ -192,7 +195,7 @@ a:hover {
 }
 
 .btn-primary {
-  background: linear-gradient(to right, #8ec31f, #ffc107);
+  background: linear-gradient(to right, #8ec31f, #fad93c);
   color: white;
   box-shadow: var(--shadow-playful);
 }
@@ -259,7 +262,7 @@ a:hover {
   border-radius: 1rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   padding: 1.5rem;
-  border: 4px solid #ffc107;
+  border: 4px solid #fad93c;
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -349,14 +352,14 @@ a:hover {
 
 /* Text Gradients */
 .text-gradient-primary {
-  background: linear-gradient(to right, #8ec31f, #ffc107);
+  background: linear-gradient(to right, #8ec31f, #fad93c);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .text-gradient-reverse {
-  background: linear-gradient(to right, #ffc107, #8ec31f);
+  background: linear-gradient(to right, #fad93c, #8ec31f);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -405,7 +408,7 @@ a:hover {
 }
 
 .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-  background-color: #ffc107;
+  background-color: #fad93c;
 }
 
 /* ========== ANIMATIONS ========== */
