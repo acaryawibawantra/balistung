@@ -98,7 +98,7 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
         const encodedMessage = encodeURIComponent(message);
 
         // WhatsApp admin number (from header component)
-        const adminWhatsApp = '6282340981718';
+        const adminWhatsApp = '628989124150';
 
         // Create WhatsApp URL
         const whatsappUrl = `https://wa.me/${adminWhatsApp}?text=${encodedMessage}`;
