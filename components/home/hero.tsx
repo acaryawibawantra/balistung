@@ -136,7 +136,7 @@ export default function HeroSection() {
                                     <input
                                         type="text"
                                         placeholder="Mau belajar apa hari ini?"
-                                        className="w-full bg-transparent border-none focus:ring-0 text-gray-700 placeholder:text-gray-400 font-semibold text-sm md:text-base outline-none"
+                                        className="w-full bg-transparent border-none focus:ring-0 text-gray-700 placeholder:text-gray-400 font-semibold text-base outline-none"
                                         onFocus={() => setIsFocused(true)}
                                         onBlur={() => setTimeout(() => setIsFocused(false), 200)}
                                         value={searchQuery}

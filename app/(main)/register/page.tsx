@@ -1,33 +1,42 @@
 'use client';
 
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Container from '@/components/layout/container';
-import { RegistrationFormData, GradeLevel, ProgramType } from '@/types/registration';
-import { HelpCircle, CheckCircle2, Smile, Brain, TrendingUp, Star, MessageCircle } from 'lucide-react';
+import { RegistrationFormData, GradeLevel, ProgramType, registrationSchema, RegistrationSchema } from '@/types/registration';
+import { HelpCircle, CheckCircle2, Smile, Brain, TrendingUp, Star, MessageCircle, AlertCircle } from 'lucide-react';
 
 export default function RegisterPage() {
-    const [formData, setFormData] = useState<RegistrationFormData>({
-        parentName: '',
-        whatsappNumber: '',
-        studentName: '',
-        studentAge: '',
-        currentGrade: '',
-        programChoice: '',
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+        watch,
+        clearErrors
+    } = useForm<RegistrationSchema>({
+        resolver: zodResolver(registrationSchema),
+        defaultValues: {
+            parentName: '',
+            whatsappNumber: '',
+            studentName: '',
+            studentAge: '',
+            currentGrade: '',
+            learningMethod: '',
+            programChoice: [],
+        }
     });
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [whatsappUrl, setWhatsappUrl] = useState('');
 
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
+    const learningMethod = watch('learningMethod');
+    const programChoice = watch('programChoice') || [];
 
-        // Basic validation
-        if (!formData.parentName || !formData.whatsappNumber || !formData.studentName ||
-            !formData.studentAge || !formData.currentGrade || !formData.programChoice) {
-            alert('Mohon lengkapi semua field yang diperlukan');
-            return;
-        }
+    const onSubmit = async (data: RegistrationSchema) => {
+        setIsSubmitting(true);
 
         // Format grade label
         const gradeLabels: Record<string, string> = {
@@ -43,8 +52,8 @@ export default function RegisterPage() {
             'sma': 'SMA'
         };
 
-        // Format program label
-        const programLabels: Record<string, string> = {
+        // Format program labels for display
+        const programLabels: Record<ProgramType, string> = {
             'bermain': 'Kelas Bermain (PAUD)',
             'bacatulis': 'Baca Tulis (PAUD)',
             'hitung': 'Berhitung (PAUD)',
@@ -54,61 +63,62 @@ export default function RegisterPage() {
             'request': 'Bimbingan SD-SMA (By Request)'
         };
 
+        const methodLabels: Record<string, string> = {
+            'offline': 'Offline (Ke Lokasi)',
+            'private': 'Private (Guru ke Rumah)',
+            'online': 'Online (Virtual)'
+        };
+
+        const selectedPrograms = data.programChoice.map(p => programLabels[p as ProgramType]).join(', ');
+
         // Send data to Google Spreadsheet
         try {
             const spreadsheetUrl = 'https://script.google.com/macros/s/AKfycbz_rgsTYhrqGSM2ZTvLDVN5cTOrmowrAQu97l93G72VHERU8iqiZWH_33QbFs0T7Ng/exec';
 
-            const response = await fetch(spreadsheetUrl, {
+            await fetch(spreadsheetUrl, {
                 method: 'POST',
-                mode: 'no-cors', // Important for Google Apps Scriptgit 
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    parentName: formData.parentName,
-                    whatsappNumber: formData.whatsappNumber,
-                    studentName: formData.studentName,
-                    studentAge: formData.studentAge,
-                    currentGrade: gradeLabels[formData.currentGrade] || formData.currentGrade,
-                    programChoice: programLabels[formData.programChoice] || formData.programChoice
+                    parentName: data.parentName,
+                    whatsappNumber: data.whatsappNumber,
+                    studentName: data.studentName,
+                    studentAge: data.studentAge,
+                    currentGrade: gradeLabels[data.currentGrade] || data.currentGrade,
+                    learningMethod: methodLabels[data.learningMethod] || data.learningMethod,
+                    programChoice: selectedPrograms
                 })
             });
-
-            console.log('Data berhasil dikirim ke spreadsheet');
         } catch (error) {
             console.error('Error mengirim ke spreadsheet:', error);
-            // Continue anyway - user can still use WhatsApp
         }
 
         // Create WhatsApp message
         const message = `*PENDAFTARAN SISWA BARU BALISTUNG*
 
 *Data Orang Tua*
-Nama: ${formData.parentName}
-WhatsApp: ${formData.whatsappNumber}
+Nama: ${data.parentName}
+WhatsApp: ${data.whatsappNumber}
 
 *Data Anak*
-Nama: ${formData.studentName}
-Usia: ${formData.studentAge}
-Kelas Saat Ini: ${gradeLabels[formData.currentGrade] || formData.currentGrade}
+Nama: ${data.studentName}
+Usia: ${data.studentAge}
+Kelas Saat Ini: ${gradeLabels[data.currentGrade] || data.currentGrade}
+Metode Belajar: ${methodLabels[data.learningMethod] || data.learningMethod}
 
 *Program yang Dipilih*
-${programLabels[formData.programChoice] || formData.programChoice}
+${selectedPrograms}
 
 ---
 Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengenai jadwal dan biaya. Terima kasih!`;
 
-        // Encode message for URL
         const encodedMessage = encodeURIComponent(message);
-
-        // WhatsApp admin number (from header component)
         const adminWhatsApp = '628989124150';
-
-        // Create WhatsApp URL
         const url = `https://wa.me/${adminWhatsApp}?text=${encodedMessage}`;
-        setWhatsappUrl(url);
 
-        // Show success modal instead of alert/window.open
+        setWhatsappUrl(url);
         setShowSuccessModal(true);
         setIsSubmitting(false);
     };
@@ -117,8 +127,32 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
         window.location.href = whatsappUrl;
     };
 
-    const handleInputChange = (field: keyof RegistrationFormData, value: string) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
+    const handleProgramToggle = (program: ProgramType) => {
+        const currentChoice = [...programChoice];
+        const index = currentChoice.indexOf(program);
+        let newChoice;
+        if (index > -1) {
+            newChoice = currentChoice.filter(p => p !== program);
+        } else {
+            newChoice = [...currentChoice, program];
+        }
+        setValue('programChoice', newChoice, { shouldValidate: true });
+    };
+
+    const PROGRAMS_BY_METHOD: Record<string, ProgramType[]> = {
+        offline: ['bermain', 'bacatulis', 'hitung', 'combo', 'english', 'math'],
+        private: ['bacatulis', 'hitung', 'combo', 'english', 'math'],
+        online: ['bacatulis', 'hitung', 'request']
+    };
+
+    const PROGRAM_DETAILS: Record<ProgramType, { label: string; subLabel: string }> = {
+        bermain: { label: 'Kelas Bermain', subLabel: 'PAUD' },
+        bacatulis: { label: 'Baca Tulis', subLabel: 'PAUD' },
+        hitung: { label: 'Berhitung', subLabel: 'PAUD' },
+        combo: { label: 'Paket Combo SD', subLabel: 'Pancasila, IPAS, B. Indo' },
+        english: { label: 'Bahasa Inggris', subLabel: 'SD' },
+        math: { label: 'Matematika', subLabel: 'SD' },
+        request: { label: 'Bimbingan SD-SMA', subLabel: 'By Request' }
     };
 
     return (
@@ -151,75 +185,82 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                         {/* Form Section */}
                         <div className="lg:col-span-7">
                             <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 border border-gray-100">
-                                <form onSubmit={handleSubmit} className="space-y-6">
+                                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                                     {/* Parent Info */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <label className="flex flex-col">
-                                            <span className="text-gray-900 text-base font-semibold mb-2">
+                                        <div className="flex flex-col">
+                                            <label className="text-gray-900 text-base font-semibold mb-2">
                                                 Nama Orang Tua
-                                            </span>
+                                            </label>
                                             <input
-                                                type="text"
-                                                value={formData.parentName}
-                                                onChange={(e) => handleInputChange('parentName', e.target.value)}
-                                                className="input"
+                                                {...register('parentName')}
+                                                className={`input ${errors.parentName ? 'border-red-500 focus:ring-red-500' : ''}`}
                                                 placeholder="Nama lengkap Ayah/Bunda"
-                                                required
                                             />
-                                        </label>
-                                        <label className="flex flex-col">
-                                            <span className="text-gray-900 text-base font-semibold mb-2">
+                                            {errors.parentName && (
+                                                <span className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                                    <AlertCircle className="w-3 h-3" /> {errors.parentName.message}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <label className="text-gray-900 text-base font-semibold mb-2">
                                                 Nomor WhatsApp
-                                            </span>
+                                            </label>
                                             <input
+                                                {...register('whatsappNumber')}
                                                 type="tel"
-                                                value={formData.whatsappNumber}
-                                                onChange={(e) => handleInputChange('whatsappNumber', e.target.value)}
-                                                className="input"
+                                                className={`input ${errors.whatsappNumber ? 'border-red-500 focus:ring-red-500' : ''}`}
                                                 placeholder="Contoh: 08123456789"
-                                                required
                                             />
-                                        </label>
+                                            {errors.whatsappNumber && (
+                                                <span className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                                    <AlertCircle className="w-3 h-3" /> {errors.whatsappNumber.message}
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
 
                                     {/* Child Info */}
                                     <div className="space-y-6 pt-4 border-t border-gray-100">
-                                        <label className="flex flex-col">
-                                            <span className="text-gray-900 text-base font-semibold mb-2">
+                                        <div className="flex flex-col">
+                                            <label className="text-gray-900 text-base font-semibold mb-2">
                                                 Nama Anak
-                                            </span>
-                                            <input
-                                                type="text"
-                                                value={formData.studentName}
-                                                onChange={(e) => handleInputChange('studentName', e.target.value)}
-                                                className="input"
-                                                placeholder="Nama lengkap calon siswa"
-                                                required
-                                            />
-                                        </label>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <label className="flex flex-col">
-                                                <span className="text-gray-900 text-base font-semibold mb-2">
-                                                    Usia Anak
-                                                </span>
-                                                <input
-                                                    type="text"
-                                                    value={formData.studentAge}
-                                                    onChange={(e) => handleInputChange('studentAge', e.target.value)}
-                                                    className="input"
-                                                    placeholder="Contoh: 6 Tahun"
-                                                    required
-                                                />
                                             </label>
-                                            <label className="flex flex-col">
-                                                <span className="text-gray-900 text-base font-semibold mb-2">
-                                                    Kelas Saat Ini
+                                            <input
+                                                {...register('studentName')}
+                                                className={`input ${errors.studentName ? 'border-red-500 focus:ring-red-500' : ''}`}
+                                                placeholder="Nama lengkap calon siswa"
+                                            />
+                                            {errors.studentName && (
+                                                <span className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                                    <AlertCircle className="w-3 h-3" /> {errors.studentName.message}
                                                 </span>
+                                            )}
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="flex flex-col">
+                                                <label className="text-gray-900 text-base font-semibold mb-2">
+                                                    Usia Anak
+                                                </label>
+                                                <input
+                                                    {...register('studentAge')}
+                                                    className={`input ${errors.studentAge ? 'border-red-500 focus:ring-red-500' : ''}`}
+                                                    placeholder="Contoh: 6 Tahun"
+                                                />
+                                                {errors.studentAge && (
+                                                    <span className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                                        <AlertCircle className="w-3 h-3" /> {errors.studentAge.message}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <label className="text-gray-900 text-base font-semibold mb-2">
+                                                    Kelas Saat Ini
+                                                </label>
                                                 <select
-                                                    value={formData.currentGrade}
-                                                    onChange={(e) => handleInputChange('currentGrade', e.target.value as GradeLevel)}
-                                                    className="input appearance-none cursor-pointer"
-                                                    required
+                                                    {...register('currentGrade')}
+                                                    className={`input appearance-none cursor-pointer ${errors.currentGrade ? 'border-red-500 focus:ring-red-500' : ''}`}
                                                 >
                                                     <option value="">Pilih Jenjang</option>
                                                     <option value="paud">PAUD</option>
@@ -233,97 +274,81 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                                                     <option value="smp">SMP</option>
                                                     <option value="sma">SMA</option>
                                                 </select>
-                                            </label>
+                                                {errors.currentGrade && (
+                                                    <span className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                                        <AlertCircle className="w-3 h-3" /> {errors.currentGrade.message}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
 
-                                    {/* Program Choice */}
+                                    {/* Learning Method Section */}
                                     <div className="space-y-6 pt-4 border-t border-gray-100">
-                                        <label className="flex flex-col">
+                                        <div className="flex flex-col">
                                             <span className="text-gray-900 text-base font-semibold mb-2">
-                                                Pilih Program Belajar
+                                                Pilih Metode Belajar
                                             </span>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
-                                                    <input
-                                                        type="radio"
-                                                        name="program"
-                                                        value="bermain"
-                                                        checked={formData.programChoice === 'bermain'}
-                                                        onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
-                                                        className="w-4 h-4 text-primary-green focus:ring-primary-green"
-                                                    />
-                                                    <span className="ml-3 font-medium">Kelas Bermain (PAUD)</span>
-                                                </label>
-                                                <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
-                                                    <input
-                                                        type="radio"
-                                                        name="program"
-                                                        value="bacatulis"
-                                                        checked={formData.programChoice === 'bacatulis'}
-                                                        onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
-                                                        className="w-4 h-4 text-primary-green focus:ring-primary-green"
-                                                    />
-                                                    <span className="ml-3 font-medium">Baca Tulis (PAUD)</span>
-                                                </label>
-                                                <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
-                                                    <input
-                                                        type="radio"
-                                                        name="program"
-                                                        value="hitung"
-                                                        checked={formData.programChoice === 'hitung'}
-                                                        onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
-                                                        className="w-4 h-4 text-primary-green focus:ring-primary-green"
-                                                    />
-                                                    <span className="ml-3 font-medium">Berhitung (PAUD)</span>
-                                                </label>
-                                                <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
-                                                    <input
-                                                        type="radio"
-                                                        name="program"
-                                                        value="combo"
-                                                        checked={formData.programChoice === 'combo'}
-                                                        onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
-                                                        className="w-4 h-4 text-primary-green focus:ring-primary-green"
-                                                    />
-                                                    <span className="ml-3 font-medium">Paket Combo SD (Pancasila, IPAS, B. Indo)</span>
-                                                </label>
-                                                <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
-                                                    <input
-                                                        type="radio"
-                                                        name="program"
-                                                        value="english"
-                                                        checked={formData.programChoice === 'english'}
-                                                        onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
-                                                        className="w-4 h-4 text-primary-green focus:ring-primary-green"
-                                                    />
-                                                    <span className="ml-3 font-medium">Bahasa Inggris</span>
-                                                </label>
-                                                <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
-                                                    <input
-                                                        type="radio"
-                                                        name="program"
-                                                        value="math"
-                                                        checked={formData.programChoice === 'math'}
-                                                        onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
-                                                        className="w-4 h-4 text-primary-green focus:ring-primary-green"
-                                                    />
-                                                    <span className="ml-3 font-medium">Matematika</span>
-                                                </label>
-                                                <label className="relative flex items-center p-4 rounded-lg border-2 border-gray-200 hover:border-primary-green transition-all cursor-pointer has-[:checked]:border-primary-green has-[:checked]:bg-primary-green/5">
-                                                    <input
-                                                        type="radio"
-                                                        name="program"
-                                                        value="request"
-                                                        checked={formData.programChoice === 'request'}
-                                                        onChange={(e) => handleInputChange('programChoice', e.target.value as ProgramType)}
-                                                        className="w-4 h-4 text-primary-green focus:ring-primary-green"
-                                                    />
-                                                    <span className="ml-3 font-medium">Bimbingan SD-SMA (By Request)</span>
-                                                </label>
+                                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                                {['offline', 'private', 'online'].map((method) => (
+                                                    <label key={method} className={`relative flex items-center p-4 rounded-lg border-2 transition-all cursor-pointer ${learningMethod === method ? 'border-primary-green bg-primary-green/5' : 'border-gray-200 hover:border-primary-green'}`}>
+                                                        <input
+                                                            type="radio"
+                                                            value={method}
+                                                            checked={learningMethod === method}
+                                                            onChange={(e) => {
+                                                                const newMethod = e.target.value as any;
+                                                                setValue('learningMethod', newMethod, { shouldValidate: true });
+                                                                // Filter out programs not valid for the new method
+                                                                const validPrograms = PROGRAMS_BY_METHOD[newMethod] || [];
+                                                                const filteredPrograms = programChoice.filter(p => validPrograms.includes(p as ProgramType));
+                                                                setValue('programChoice', filteredPrograms);
+                                                            }}
+                                                            className="w-4 h-4 text-primary-green focus:ring-primary-green"
+                                                        />
+                                                        <span className="ml-3 font-medium capitalize">{method}</span>
+                                                    </label>
+                                                ))}
                                             </div>
-                                        </label>
+                                            {errors.learningMethod && (
+                                                <span className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                                    <AlertCircle className="w-3 h-3" /> {errors.learningMethod.message}
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
+
+                                    {/* Program Choice Section - Filtered */}
+                                    {learningMethod && (
+                                        <div className="space-y-6 pt-4 border-t border-gray-100 animate-fade-in">
+                                            <div className="flex flex-col">
+                                                <span className="text-gray-900 text-base font-semibold mb-2">
+                                                    Pilih Program Belajar (Bisa pilih lebih dari 1)
+                                                </span>
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                    {PROGRAMS_BY_METHOD[learningMethod as string]?.map((program) => (
+                                                        <label key={program} className={`relative flex items-center p-4 rounded-lg border-2 transition-all cursor-pointer ${programChoice.includes(program) ? 'border-primary-green bg-primary-green/5' : 'border-gray-200 hover:border-primary-green'}`}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={programChoice.includes(program)}
+                                                                onChange={() => handleProgramToggle(program)}
+                                                                className="w-4 h-4 rounded text-primary-green focus:ring-primary-green"
+                                                            />
+                                                            <div className="ml-3">
+                                                                <span className="block font-medium">{PROGRAM_DETAILS[program].label}</span>
+                                                                <span className="block text-xs text-gray-500">{PROGRAM_DETAILS[program].subLabel}</span>
+                                                            </div>
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                                {errors.programChoice && (
+                                                    <span className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                                        <AlertCircle className="w-3 h-3" /> {errors.programChoice.message}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
 
                                     <div className="pt-6">
                                         <button

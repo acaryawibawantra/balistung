@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export interface Registration {
     id: string;
     // Parent/Guardian Information
@@ -10,7 +12,8 @@ export interface Registration {
     currentGrade: GradeLevel;
 
     // Program Selection
-    programChoice: ProgramType;
+    learningMethod: LearningMethod;
+    programChoice: ProgramType[];
 
     // Metadata
     status: RegistrationStatus;
@@ -29,6 +32,8 @@ export type GradeLevel =
     | 'sd6'
     | 'smp'
     | 'sma';
+
+export type LearningMethod = 'offline' | 'private' | 'online';
 
 export type ProgramType =
     | 'bermain'
@@ -52,5 +57,22 @@ export interface RegistrationFormData {
     studentName: string;
     studentAge: string;
     currentGrade: GradeLevel | '';
-    programChoice: ProgramType | '';
+    learningMethod: LearningMethod | '';
+    programChoice: ProgramType[];
 }
+
+export const registrationSchema = z.object({
+    parentName: z.string().min(3, 'Nama orang tua minimal 3 karakter'),
+    whatsappNumber: z.string()
+        .min(10, 'Nomor WhatsApp minimal 10 digit')
+        .max(15, 'Nomor WhatsApp maksimal 15 digit')
+        .regex(/^[0-9]+$/, 'Nomor WhatsApp hanya boleh berisi angka'),
+    studentName: z.string().min(2, 'Nama anak minimal 2 karakter'),
+    studentAge: z.string()
+        .regex(/^([0-9]+)\s*(Tahun|tahun)$/, 'Format usia harus "X Tahun" (contoh: 6 Tahun)'),
+    currentGrade: z.string().min(1, 'Pilih jenjang pendidikan'),
+    learningMethod: z.string().min(1, 'Pilih metode belajar'),
+    programChoice: z.array(z.string()).min(1, 'Pilih minimal satu program belajar'),
+});
+
+export type RegistrationSchema = z.infer<typeof registrationSchema>;
