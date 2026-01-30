@@ -65,7 +65,7 @@ export default function RegisterPage() {
 
         const methodLabels: Record<string, string> = {
             'offline': 'Offline (Ke Lokasi)',
-            'private': 'Private (Guru ke Rumah)',
+            'privat': 'Privat (Guru ke Rumah)',
             'online': 'Online (Virtual)'
         };
 
@@ -141,7 +141,7 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
 
     const PROGRAMS_BY_METHOD: Record<string, ProgramType[]> = {
         offline: ['bermain', 'bacatulis', 'hitung', 'combo', 'english', 'math'],
-        private: ['bacatulis', 'hitung', 'combo', 'english', 'math'],
+        privat: ['bacatulis', 'hitung', 'combo', 'english', 'math'],
         online: ['bacatulis', 'hitung', 'request']
     };
 
@@ -195,7 +195,7 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                                             <input
                                                 {...register('parentName')}
                                                 className={`input ${errors.parentName ? 'border-red-500 focus:ring-red-500' : ''}`}
-                                                placeholder="Nama lengkap Ayah/Bunda"
+                                                placeholder="Nama Ayah/Bunda"
                                             />
                                             {errors.parentName && (
                                                 <span className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -290,7 +290,7 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                                                 Pilih Metode Belajar
                                             </span>
                                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                                {['offline', 'private', 'online'].map((method) => (
+                                                {['offline', 'privat', 'online'].map((method) => (
                                                     <label key={method} className={`relative flex items-center p-4 rounded-lg border-2 transition-all cursor-pointer ${learningMethod === method ? 'border-primary-green bg-primary-green/5' : 'border-gray-200 hover:border-primary-green'}`}>
                                                         <input
                                                             type="radio"
@@ -326,20 +326,28 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                                                     Pilih Program Belajar (Bisa pilih lebih dari 1)
                                                 </span>
                                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                    {PROGRAMS_BY_METHOD[learningMethod as string]?.map((program) => (
-                                                        <label key={program} className={`relative flex items-center p-4 rounded-lg border-2 transition-all cursor-pointer ${programChoice.includes(program) ? 'border-primary-green bg-primary-green/5' : 'border-gray-200 hover:border-primary-green'}`}>
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={programChoice.includes(program)}
-                                                                onChange={() => handleProgramToggle(program)}
-                                                                className="w-4 h-4 rounded text-primary-green focus:ring-primary-green"
-                                                            />
-                                                            <div className="ml-3">
-                                                                <span className="block font-medium">{PROGRAM_DETAILS[program].label}</span>
-                                                                <span className="block text-xs text-gray-500">{PROGRAM_DETAILS[program].subLabel}</span>
-                                                            </div>
-                                                        </label>
-                                                    ))}
+                                                    {PROGRAMS_BY_METHOD[learningMethod as string]
+                                                        ?.filter(program => {
+                                                            const currentGrade = watch('currentGrade');
+                                                            if (learningMethod === 'privat' && (currentGrade === 'smp' || currentGrade === 'sma')) {
+                                                                return ['english', 'math'].includes(program);
+                                                            }
+                                                            return true;
+                                                        })
+                                                        ?.map((program) => (
+                                                            <label key={program} className={`relative flex items-center p-4 rounded-lg border-2 transition-all cursor-pointer ${programChoice.includes(program) ? 'border-primary-green bg-primary-green/5' : 'border-gray-200 hover:border-primary-green'}`}>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={programChoice.includes(program)}
+                                                                    onChange={() => handleProgramToggle(program)}
+                                                                    className="w-4 h-4 rounded text-primary-green focus:ring-primary-green"
+                                                                />
+                                                                <div className="ml-3">
+                                                                    <span className="block font-medium">{PROGRAM_DETAILS[program].label}</span>
+                                                                    <span className="block text-xs text-gray-500">{PROGRAM_DETAILS[program].subLabel}</span>
+                                                                </div>
+                                                            </label>
+                                                        ))}
                                                 </div>
                                                 {errors.programChoice && (
                                                     <span className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -474,7 +482,7 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                                     </div>
                                     <div>
                                         <p className="font-semibold text-sm">Konsultasi via WhatsApp</p>
-                                        <p className="text-xs text-gray-600">Aktif 08:00 - 17:00</p>
+                                        <p className="text-xs text-gray-600">Admin Balistung</p>
                                     </div>
                                 </div>
                                 <a
