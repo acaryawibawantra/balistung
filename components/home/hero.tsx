@@ -17,11 +17,11 @@ const programs = [
     },
     {
         icon: <User className="w-6 h-6 text-[#fad93c]" />,
-        title: 'Private',
+        title: 'Privat',
         description: 'Tutor berpengalaman datang langsung ke rumah Anda. Fokus penuh 1-on-1.',
         bgIcon: 'bg-yellow-50',
         color: 'text-[#f58d2c]',
-        link: '/programs/private'
+        link: '/programs/privat'
     },
     {
         icon: <Video className="w-6 h-6 text-[#8ec31f]" />,
@@ -59,7 +59,7 @@ const dummyPrograms = [
 
 const learningModes = [
     { id: 'offline', label: 'Offline (Ke Lokasi)', icon: Home },
-    { id: 'private', label: 'Private (Guru ke Rumah)', icon: User },
+    { id: 'privat', label: 'Privat (Guru ke Rumah)', icon: User },
     { id: 'online', label: 'Online (Virtual)', icon: Video },
 ];
 
@@ -198,7 +198,7 @@ export default function HeroSection() {
                                         <div className="text-left">
                                             <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Mode Belajar</div>
                                             <div className="text-sm font-bold text-gray-700 truncate">
-                                                {selectedMode ? (selectedMode.id === 'offline' ? 'Offline' : selectedMode.id === 'private' ? 'Private' : 'Online') : 'Mau belajar di mana?'}
+                                                {selectedMode ? (selectedMode.id === 'offline' ? 'Offline' : selectedMode.id === 'privat' ? 'Privat' : 'Online') : 'Mau belajar di mana?'}
                                             </div>
                                         </div>
                                     </div>
