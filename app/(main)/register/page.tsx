@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import Container from '@/components/layout/container';
 import { RegistrationFormData, GradeLevel, ProgramType } from '@/types/registration';
 import { HelpCircle, CheckCircle2, Smile, Brain, TrendingUp, Star, MessageCircle } from 'lucide-react';
@@ -14,9 +14,13 @@ export default function RegisterPage() {
         currentGrade: '',
         programChoice: '',
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [whatsappUrl, setWhatsappUrl] = useState('');
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        setIsSubmitting(true);
 
         // Basic validation
         if (!formData.parentName || !formData.whatsappNumber || !formData.studentName ||
@@ -101,13 +105,16 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
         const adminWhatsApp = '628989124150';
 
         // Create WhatsApp URL
-        const whatsappUrl = `https://wa.me/${adminWhatsApp}?text=${encodedMessage}`;
+        const url = `https://wa.me/${adminWhatsApp}?text=${encodedMessage}`;
+        setWhatsappUrl(url);
 
-        // Open WhatsApp in new tab
-        window.open(whatsappUrl, '_blank');
+        // Show success modal instead of alert/window.open
+        setShowSuccessModal(true);
+        setIsSubmitting(false);
+    };
 
-        // Show success message
-        alert('Data pendaftaran telah tersimpan! Anda akan diarahkan ke WhatsApp untuk konfirmasi.');
+    const handleWhatsAppRedirect = () => {
+        window.location.href = whatsappUrl;
     };
 
     const handleInputChange = (field: keyof RegistrationFormData, value: string) => {
@@ -321,9 +328,10 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                                     <div className="pt-6">
                                         <button
                                             type="submit"
-                                            className="w-full btn btn-primary btn-lg shadow-lg shadow-primary-green/20 hover:scale-[1.01] active:scale-[0.99] transition-all"
+                                            disabled={isSubmitting}
+                                            className="w-full btn btn-primary btn-lg shadow-lg shadow-primary-green/20 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
-                                            Kirim Formulir Pendaftaran
+                                            {isSubmitting ? 'Mengirim...' : 'Kirim Formulir Pendaftaran'}
                                         </button>
                                         <p className="text-center text-sm text-gray-600 mt-4">
                                             Dengan mendaftar, Anda menyetujui kebijakan privasi Balistung.
@@ -332,6 +340,36 @@ Saya tertarik untuk mendaftarkan anak saya. Mohon informasi lebih lanjut mengena
                                 </form>
                             </div>
                         </div>
+
+                        {/* Success Modal */}
+                        {showSuccessModal && (
+                            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+                                <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center animate-scale-in">
+                                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                        <CheckCircle2 className="w-10 h-10 text-primary-green" />
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Berhasil Terkirim!</h3>
+                                    <p className="text-gray-600 mb-8">
+                                        Data pendaftaran telah tersimpan. Silakan klik tombol di bawah untuk konfirmasi pendaftaran melalui WhatsApp Admin.
+                                    </p>
+                                    <div className="space-y-3">
+                                        <button
+                                            onClick={handleWhatsAppRedirect}
+                                            className="w-full py-4 bg-[#25D366] hover:bg-[#20bd5c] text-white rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2"
+                                        >
+                                            <MessageCircle className="w-5 h-5" />
+                                            Lanjutkan ke WhatsApp
+                                        </button>
+                                        <button
+                                            onClick={() => setShowSuccessModal(false)}
+                                            className="w-full py-3 text-gray-500 font-medium hover:text-gray-700 transition-colors"
+                                        >
+                                            Nanti Saja
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Benefits Sidebar */}
                         <div className="lg:col-span-5 flex flex-col gap-6">
