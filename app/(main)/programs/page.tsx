@@ -37,7 +37,7 @@ const programCategories = [
         slug: 'offline'
     },
     {
-        title: 'Kelas Private',
+        title: 'Kelas Privat',
         subtitle: '(Guru ke Rumah)',
         description: 'Layanan guru datang ke rumah Anda. Memberikan perhatian penuh 1-on-1 yang lebih personal dan waktu belajar yang fleksibel.',
         badge: 'Khusus PAUD - SD',
@@ -53,7 +53,7 @@ const programCategories = [
             { icon: User, text: 'Fokus Personal 1-on-1' },
         ],
         ctaColor: 'bg-[#f58d2c] hover:brightness-110 shadow-orange-500/25',
-        slug: 'private'
+        slug: 'privat'
     },
     {
         title: 'Kelas Online',
@@ -199,7 +199,7 @@ export default function ProgramsPage() {
                         <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-sm text-gray-500 font-medium">
                             <span className="flex items-center gap-2">
                                 <Clock className="w-4 h-4 text-primary-orange" />
-                                Tersedia Setiap Hari: 08.00 - 17.00 WIB
+                                Konsultasi via WA Aktif Setiap Hari
                             </span>
                             <span className="hidden md:block text-gray-300">|</span>
                             <span className="flex items-center gap-2">

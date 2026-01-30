@@ -35,10 +35,10 @@ export default function ProgramDetailPage({
 }) {
     const { slug } = React.use(params);
     const isOffline = slug === 'offline';
-    const isPrivate = slug === 'private';
+    const isPrivat = slug === 'privat';
     const isOnline = slug === 'online';
 
-    if (!isOffline && !isPrivate && !isOnline) {
+    if (!isOffline && !isPrivat && !isOnline) {
         return (
             <div className="min-h-screen pt-32 text-center">
                 <Container>
@@ -124,8 +124,8 @@ export default function ProgramDetailPage({
                 capacity: "Maksimal 5 anak per kelompok."
             }
         },
-        private: {
-            title: "Kelas Private: Guru ke Rumah",
+        privat: {
+            title: "Kelas Privat: Guru ke Rumah",
             subtitle: "Bimbingan Personal 1-on-1",
             description: "Anak dapat belajar lebih nyaman di rumah dengan porsi perhatian penuh dari tutor untuk hasil maksimal.",
             heroIcon: <Sparkles className="w-3.5 h-3.5 text-primary-orange" />,
@@ -175,7 +175,7 @@ export default function ProgramDetailPage({
                 }
             ],
             info: {
-                title: "Kenapa Memilih Private?",
+                title: "Kenapa Memilih Privat?",
                 benefits: [
                     "Waktu belajar lebih fleksibel dan hemat waktu.",
                     "Konsentrasi anak lebih fokus (1-on-1).",
@@ -236,7 +236,7 @@ export default function ProgramDetailPage({
                 capacity: "Interaksi Langsung via Zoom/Meet."
             }
         }
-    }[slug as 'offline' | 'private' | 'online'];
+    }[slug as 'offline' | 'privat' | 'online'];
 
     return (
         <div className="min-h-screen bg-cream pb-20">
