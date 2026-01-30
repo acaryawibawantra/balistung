@@ -33,7 +33,7 @@ export type GradeLevel =
     | 'smp'
     | 'sma';
 
-export type LearningMethod = 'offline' | 'private' | 'online';
+export type LearningMethod = 'offline' | 'privat' | 'online';
 
 export type ProgramType =
     | 'bermain'
@@ -66,7 +66,8 @@ export const registrationSchema = z.object({
     whatsappNumber: z.string()
         .min(10, 'Nomor WhatsApp minimal 10 digit')
         .max(15, 'Nomor WhatsApp maksimal 15 digit')
-        .regex(/^[0-9]+$/, 'Nomor WhatsApp hanya boleh berisi angka'),
+        .regex(/^[0-9]+$/, 'Nomor WhatsApp hanya boleh berisi angka')
+        .startsWith('08', 'Nomor WhatsApp harus diawali dengan 08'),
     studentName: z.string().min(2, 'Nama anak minimal 2 karakter'),
     studentAge: z.string()
         .regex(/^([0-9]+)\s*(Tahun|tahun)$/, 'Format usia harus "X Tahun" (contoh: 6 Tahun)'),
